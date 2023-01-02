@@ -14,7 +14,7 @@ class _SettingPageState extends State<SettingPage> {
       backgroundColor: const Color.fromRGBO(0xff, 0x98, 0x00, 0.1),
       body: Container(
         color: Colors.blue,
-        child: Text('设置视图'),
+        child: const Text('设置视图'),
       ),
     );
   }

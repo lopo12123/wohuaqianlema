@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wohuaqianlema/scripts/record_manager.dart';
@@ -56,7 +54,6 @@ class _CalendarPageState extends State<CalendarPage> {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              print('selected: ${selectedDay.day}, focused: ${focusedDay.day}');
             },
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
