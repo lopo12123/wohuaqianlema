@@ -19,10 +19,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavyBar(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        showElevation: false,
         selectedIndex: _tabIdx,
         backgroundColor:
             [Colors.blue, Colors.red, Colors.orange][_tabIdx].withOpacity(0.2),
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         items: [
           BottomNavyBarItem(
             icon: const Icon(Icons.create),
@@ -44,17 +45,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         onItemSelected: (idx) {
-          setState(() {
-            _tabIdx = idx;
-          });
+          _tabController.jumpToPage(idx);
+          setState(() => _tabIdx = idx);
         },
       ),
       body: PageView(
         controller: _tabController,
         onPageChanged: (idx) {
-          setState(() {
-            _tabIdx = idx;
-          });
+          setState(() => _tabIdx = idx);
         },
         children: const [RecordPage(), CalendarPage(), SettingPage()],
       ),

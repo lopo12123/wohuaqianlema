@@ -10,11 +10,10 @@ class RecordPage extends StatefulWidget {
 class _RecordPageState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Center(
-          child: Text('记录视图', style: TextStyle(fontFamily: 'PingFang'),),
-        ),
+    return const Scaffold(
+      backgroundColor: Color.fromRGBO(0x21, 0x96, 0xf3, 0.1),
+      body: Center(
+        child: Text('记录视图'),
       ),
     );
   }

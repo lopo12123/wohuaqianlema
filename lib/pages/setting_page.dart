@@ -11,10 +11,9 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: Text('设置视图'),
-        ),
+      backgroundColor: Color.fromRGBO(0xff, 0x98, 0x00, 0.1),
+      body: Center(
+        child: Text('设置视图'),
       ),
     );
   }
