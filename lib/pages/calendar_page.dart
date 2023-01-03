@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:wohuaqianlema/scripts/record_manager.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -18,7 +17,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // 计算当日花费和明细
   void queryTodayDetail(DateTime today) {
-    RecordManager.getDaySum(today).then((value) => _todayCount = value);
+    // RecordManager.getDaySum(today).then((value) => _todayCount = value);
   }
 
   @override
