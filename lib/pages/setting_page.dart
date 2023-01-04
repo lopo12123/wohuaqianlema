@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../scripts/utils.dart';
 import '../scripts/record_manager.dart';
 
 class SettingPage extends StatefulWidget {
@@ -41,6 +42,24 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 RecordManager.clear()
                     .then((count) => print('[测试] 清空数据库完成, 删除条目数: $count'));
+              },
+            ),
+            ElevatedButton(
+              child: Text('点击选择日期'),
+              onPressed: () {
+                pickDateLocal(context: context).then((value) {
+                  print('picked: $value');
+                  if(value != null) print('picked: ${formatDate(value)}');
+                });
+              },
+            ),
+            ElevatedButton(
+              child: Text('点击选择时间'),
+              onPressed: () {
+                pickTimeLocal(context: context).then((value) {
+                  print('picked: $value');
+                  if(value != null) print('picked: ${formatTime(value)}');
+                });
               },
             ),
           ],

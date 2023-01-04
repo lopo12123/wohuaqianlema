@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavyBarItem(
             icon: const Icon(Icons.calendar_month_outlined),
-            title: const Text('全览'),
+            title: const Text('日历'),
             textAlign: TextAlign.center,
             activeColor: Colors.redAccent,
           ),

@@ -10,10 +10,17 @@ class RecordPage extends StatefulWidget {
 class _RecordPageState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Color.fromRGBO(0x21, 0x96, 0xf3, 0.1),
-      body: Center(
-        child: Text('记录视图'),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FloatingActionButton.large(
+            onPressed: () => null,
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }

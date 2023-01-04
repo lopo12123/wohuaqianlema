@@ -26,7 +26,7 @@ class _CalendarPageState extends State<CalendarPage> {
       appBar: AppBar(
         backgroundColor: Colors.redAccent.withOpacity(0.2),
         elevation: 0,
-        title: const Text('全览 Overview'),
+        title: const Text('日历 Calendar'),
       ),
       backgroundColor: const Color.fromRGBO(0xf4, 0x43, 0x36, 0.1),
       body: Column(
