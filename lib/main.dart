@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:wohuaqianlema/home_page.dart';
 
 void main() {
-  initializeDateFormatting().then((_) => runApp(const MyApp()));
+  // initializeDateFormatting().then((_) => runApp(const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,8 +14,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       title: 'Application Name',
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('en'),
+        Locale('zh'),
+      ],
+      locale: const Locale('zh'),
       theme: ThemeData(
         // This is the theme of your application.
         //
