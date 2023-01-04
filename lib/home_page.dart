@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
             [Colors.blue, Colors.red, Colors.orange][_tabIdx].withOpacity(0.2),
         items: [
           BottomNavyBarItem(
-            icon: const Icon(Icons.create),
+            icon: const Icon(Icons.receipt_long_outlined),
             title: const Text('记录'),
             textAlign: TextAlign.center,
             activeColor: Colors.blueAccent,
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             activeColor: Colors.redAccent,
           ),
           BottomNavyBarItem(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined),
             title: const Text('设置'),
             textAlign: TextAlign.center,
             activeColor: Colors.orange,
