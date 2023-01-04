@@ -19,3 +19,13 @@ Future<TimeOfDay?> pickTimeLocal({required BuildContext context}) async {
     initialTime: TimeOfDay.now(),
   );
 }
+
+// 格式化日期
+String formatDate(DateTime t) {
+  return '${t.year}-${t.month < 10 ? '0${t.month}' : t.month}-${t.day < 10 ? '0${t.day}' : t.day}';
+}
+
+// 格式化时间
+String formatTime(TimeOfDay t) {
+  return '${t.hour < 10 ? '0${t.hour}' : t.hour}:${t.minute < 10 ? '0${t.minute}' : t.minute}';
+}
