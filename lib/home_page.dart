@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BarItem(
             title: '统计',
-            icon: Icons.bar_chart,
+            icon: Icons.insert_chart_outlined,
             activeColor: Colors.green.shade300,
             inactiveColor: Colors.black12,
           ),
