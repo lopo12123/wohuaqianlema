@@ -6,14 +6,14 @@ class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _SettingPageState();
+  State<SettingPage> createState() => _SettingPageState();
 }
 
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(0xff, 0x98, 0x00, 0.1),
+      backgroundColor: Colors.orange.shade50,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

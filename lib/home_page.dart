@@ -1,6 +1,8 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:wohuaqianlema/pages/calendar_page.dart';
+import 'package:wohuaqianlema/pages/overview_page.dart';
 import 'package:wohuaqianlema/pages/record_page.dart';
 import 'package:wohuaqianlema/pages/setting_page.dart';
 
@@ -18,43 +20,56 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavyBar(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        showElevation: false,
+      bottomNavigationBar: SlidingClippedNavBar.colorful(
         selectedIndex: _tabIdx,
-        backgroundColor:
-            [Colors.blue, Colors.red, Colors.orange][_tabIdx].withOpacity(0.2),
-        items: [
-          BottomNavyBarItem(
-            icon: const Icon(Icons.receipt_long_outlined),
-            title: const Text('记录'),
-            textAlign: TextAlign.center,
-            activeColor: Colors.blueAccent,
-          ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.calendar_month_outlined),
-            title: const Text('日历'),
-            textAlign: TextAlign.center,
-            activeColor: Colors.redAccent,
-          ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.settings_outlined),
-            title: const Text('设置'),
-            textAlign: TextAlign.center,
-            activeColor: Colors.orange,
-          ),
-        ],
-        onItemSelected: (idx) {
+        backgroundColor: [
+          Colors.blue.shade100,
+          Colors.red.shade100,
+          Colors.green.shade100,
+          Colors.orange.shade100
+        ][_tabIdx],
+        onButtonPressed: (idx) {
           _tabController.jumpToPage(idx);
           setState(() => _tabIdx = idx);
         },
+        barItems: [
+          BarItem(
+            title: '记录',
+            icon: Icons.receipt_long_outlined,
+            activeColor: Colors.blue.shade300,
+            inactiveColor: Colors.black12,
+          ),
+          BarItem(
+            title: '日历',
+            icon: Icons.calendar_month_outlined,
+            activeColor: Colors.red.shade300,
+            inactiveColor: Colors.black12,
+          ),
+          BarItem(
+            title: '统计',
+            icon: Icons.bar_chart,
+            activeColor: Colors.green.shade300,
+            inactiveColor: Colors.black12,
+          ),
+          BarItem(
+            title: '设置',
+            icon: Icons.settings_outlined,
+            activeColor: Colors.orange.shade300,
+            inactiveColor: Colors.black12,
+          ),
+        ],
       ),
       body: PageView(
         controller: _tabController,
         onPageChanged: (idx) {
           setState(() => _tabIdx = idx);
         },
-        children: const [RecordPage(), CalendarPage(), SettingPage()],
+        children: const [
+          RecordPage(),
+          CalendarPage(),
+          OverviewPage(),
+          SettingPage(),
+        ],
       ),
     );
   }

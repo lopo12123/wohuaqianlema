@@ -24,11 +24,11 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent.withOpacity(0.2),
+        backgroundColor: Colors.red.shade100,
         elevation: 0,
         title: const Text('日历 Calendar'),
       ),
-      backgroundColor: const Color.fromRGBO(0xf4, 0x43, 0x36, 0.1),
+      backgroundColor: Colors.red.shade50,
       body: Column(
         children: [
           TableCalendar(
