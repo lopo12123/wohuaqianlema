@@ -39,6 +39,7 @@ dependencies:
   flutter_native_splash: ^2.2.16
   get: any
   intl: ^0.17.0
+  modal_bottom_sheet:
   sliding_clipped_nav_bar:
   sqflite: 2.2.2
   table_calendar: ^3.0.8
