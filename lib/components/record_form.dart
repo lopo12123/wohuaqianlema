@@ -38,6 +38,7 @@ class _RecordFormState extends State<RecordForm> {
         padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
         child: Column(
           children: [
+            // 入/出
             Switch(
               value: isIncome,
               onChanged: (v) {
@@ -46,7 +47,19 @@ class _RecordFormState extends State<RecordForm> {
                 });
               },
             ),
-            TextField(
+            // 方式 - method
+            const TextField(
+              maxLength: 10,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: '方式',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+              ),
+            ),
+            // 备注 - desc
+            const TextField(
               maxLength: 50,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
@@ -56,8 +69,6 @@ class _RecordFormState extends State<RecordForm> {
                 ),
               ),
             ),
-            Text('2222'),
-            Text(isIncome ? 'true' : 'false'),
           ],
         ),
       ),
