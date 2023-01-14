@@ -38,14 +38,20 @@ class _RecordFormState extends State<RecordForm> {
         padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
         child: Column(
           children: [
-            // 入/出
-            Switch(
-              value: isIncome,
-              onChanged: (v) {
-                setState(() {
-                  isIncome = v;
-                });
-              },
+            // 入/出 -- radio group
+            Row(
+              children: [
+                Text('流向'),
+                Switch(
+                  value: isIncome,
+                  onChanged: (v) {
+                    setState(() {
+                      isIncome = v;
+                    });
+                  },
+                ),
+                Text(isIncome ? '收入' : '支出')
+              ],
             ),
             // 方式 - method
             const TextField(
