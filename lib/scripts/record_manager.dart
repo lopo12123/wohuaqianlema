@@ -17,13 +17,16 @@ class _Constants {
   static const String sqlCreateRecordTable = '''
     CREATE TABLE IF NOT EXISTS $tableName (
       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-      date TEXT(10) NOT NULL,
-      time TEXT(5) NOT NULL,
+      dateTime TEXT(20) NOT NULL,
+      amount REAL NOT NULL,
       inout INTEGER NOT NULL,
       method TEXT(10),
       desc TEXT(100)
     );
   ''';
+
+  /// sql: 删除 Record 表
+  static const String sqlDropRecordTable = '''DROP TABLE record;''';
 }
 
 /// 数据库控制类
@@ -42,7 +45,7 @@ class RecordManager {
   }
 
   /// 检查数据库是否已打开 (未打开则打印错误信息)
-  static Future<bool> checkIfAvailable({String desc = '自检'}) async {
+  static Future<bool> _checkIfAvailable({String desc = '自检'}) async {
     if (!isOpen()) {
       print('[$desc] 数据库未连接!');
       return false;
@@ -72,7 +75,7 @@ class RecordManager {
 
   /// 获取全部的表名 (去除 'android_metadata'、'sqlite_sequence' 等自动创建表)
   static Future<List<String>> getValidTableNames() async {
-    bool available = await checkIfAvailable(desc: '查询');
+    bool available = await _checkIfAvailable(desc: '查询');
 
     if (available) {
       List<String> validTableNames = [];
@@ -94,14 +97,14 @@ class RecordManager {
 
   /// todo 插入数据
   static Future<void> insert() async {
-    bool available = await checkIfAvailable(desc: '插入');
+    bool available = await _checkIfAvailable(desc: '插入');
 
     if (available) {}
   }
 
   /// todo 删除数据 返回删除的条目数
   static Future<int> delete() async {
-    bool available = await checkIfAvailable(desc: '删除');
+    bool available = await _checkIfAvailable(desc: '删除');
 
     if (available) {}
 
@@ -110,21 +113,21 @@ class RecordManager {
 
   /// todo 查询数据
   static Future<void> query() async {
-    bool available = await checkIfAvailable(desc: '查询');
+    bool available = await _checkIfAvailable(desc: '查询');
 
     if (available) {}
   }
 
   /// todo 更新数据
   static Future<void> update() async {
-    bool available = await checkIfAvailable(desc: '更新');
+    bool available = await _checkIfAvailable(desc: '更新');
 
     if (available) {}
   }
 
   /// 清空数据表 - 返回删除的条目数
   static Future<int> clear() async {
-    bool available = await checkIfAvailable(desc: '清空');
+    bool available = await _checkIfAvailable(desc: '清空');
 
     if (available) {
       int count = await _db!.delete('record');
@@ -134,9 +137,25 @@ class RecordManager {
     return 0;
   }
 
+  static Future<bool> drop(String tableName) async {
+    bool available = await _checkIfAvailable(desc: '删表');
+
+    if (available) {
+      _db
+          ?.execute(_Constants.sqlDropRecordTable)
+          .then((v) => print('[删除表] 删除表完成!'))
+          .catchError((err) {
+        print(err);
+      });
+      return true;
+    }
+
+    return false;
+  }
+
   /// 关闭数据库连接
   static Future<void> dispose() async {
-    bool available = await checkIfAvailable(desc: '关闭');
+    bool available = await _checkIfAvailable(desc: '关闭');
 
     if (available) {
       _db?.close();
