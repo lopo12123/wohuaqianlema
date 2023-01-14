@@ -20,5 +20,5 @@ speed_dial https://pub.dev/packages/simple_speed_dial
 | dateTime | Text(20)  | 日期 YYYY-MM-DD_HH:mm:ss |
 | amount   | REAL      | 金额                     |
 | inout    | INTEGER   | 0 支出 / 1 收入            |
-| method   | Text(20)  | 方式 (自定义文本标签)           |
+| method   | Text(10)  | 方式 (自定义文本标签)           |
 | desc     | Text(100) | 记录描述                   |
