@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:wohuaqianlema/components/record_form.dart';
 
@@ -10,6 +11,8 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
+  bool isFinished = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,19 +21,34 @@ class _RecordPageState extends State<RecordPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  showMaterialModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (v) {
-                        // todo 记录详细内容
-                        return const RecordForm();
-                      });
-                },
-                icon: const Icon(Icons.edit_outlined),
-                label: const Text('记个账!'),
-              ),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: SwipeButton.expand(
+                  width: 250,
+                  thumb: Icon(
+                    Icons.double_arrow_rounded,
+                    color: Colors.white,
+                  ),
+                  activeThumbColor: Colors.blue,
+                  activeTrackColor: Colors.blue.shade100,
+                  child: const Text(
+                    'Slide to record.',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontFamily: 'Gilroy',
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  onSwipe: () {
+                    showMaterialModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        builder: (v) {
+                          return const RecordForm();
+                        });
+                  },
+                ),
+              )
             ],
           ),
         ));

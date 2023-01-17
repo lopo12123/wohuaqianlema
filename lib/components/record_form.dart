@@ -1,3 +1,4 @@
+import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:flutter/material.dart';
 
 class RecordForm extends StatefulWidget {
@@ -14,11 +15,11 @@ class _RecordFormState extends State<RecordForm> {
   // 金额
   double amount = 0.0;
 
-  // 日期
-  bool bb = false;
-
-  // 日期
+  // 方式
   String method = '';
+
+  // 描述
+  var _descController = TextEditingController();
 
   // 日期
   DateTime date = DateTime.now();
@@ -39,42 +40,85 @@ class _RecordFormState extends State<RecordForm> {
         child: Column(
           children: [
             // 入/出 -- radio group
-            Row(
+            AnimatedButtonBar(
+              radius: 8,
+              innerVerticalPadding: 16,
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.blue.shade100,
+              borderColor: Colors.blue,
               children: [
-                Text('流向'),
-                Switch(
-                  value: isIncome,
-                  onChanged: (v) {
+                ButtonBarEntry(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.indeterminate_check_box_outlined,
+                        color: isIncome ? Colors.blue.shade100 : Colors.blue,
+                      ),
+                      Text(
+                        '支出',
+                        style: TextStyle(
+                          color: isIncome ? Colors.blue.shade100 : Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                  onTap: () {
                     setState(() {
-                      isIncome = v;
+                      isIncome = false;
                     });
                   },
                 ),
-                Text(isIncome ? '收入' : '支出')
+                ButtonBarEntry(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_box_outlined,
+                        color: isIncome ? Colors.blue : Colors.blue.shade100,
+                      ),
+                      Text(
+                        '收入',
+                        style: TextStyle(
+                          color: isIncome ? Colors.blue : Colors.blue.shade100,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                  onTap: () {
+                    setState(() {
+                      isIncome = true;
+                    });
+                  },
+                ),
               ],
             ),
-            // 方式 - method
-            const TextField(
-              maxLength: 10,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: '方式',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
-            ),
             // 备注 - desc
-            const TextField(
+            TextField(
+              controller: _descController,
               maxLength: 50,
               keyboardType: TextInputType.number,
+              onChanged: (s) {
+                print(s);
+              },
               decoration: InputDecoration(
                 labelText: '备注',
+                hintText: '请输入备注(可选)',
+                suffixIcon: IconButton(
+                  onPressed: () => _descController.clear(),
+                  icon: const Icon(Icons.clear),
+                ),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
                 ),
               ),
             ),
+            Text(isIncome ? 'true' : 'false'),
           ],
         ),
       ),
