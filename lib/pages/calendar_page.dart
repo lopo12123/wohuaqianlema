@@ -8,7 +8,8 @@ class CalendarPage extends StatefulWidget {
   State<StatefulWidget> createState() => _CalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> {
+class _CalendarPageState extends State<CalendarPage>
+    with AutomaticKeepAliveClientMixin {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _format = CalendarFormat.month;
@@ -80,4 +81,7 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
