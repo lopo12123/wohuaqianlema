@@ -1,5 +1,6 @@
 import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class RecordForm extends StatefulWidget {
   const RecordForm({super.key});
@@ -14,20 +15,35 @@ class _RecordFormState extends State<RecordForm> {
 
   // 金额
   double amount = 0.0;
+  final _amountController = TextEditingController();
 
   // 方式
   String method = '';
 
   // 描述
-  var _descController = TextEditingController();
+  final _descController = TextEditingController();
 
   // 日期
   DateTime date = DateTime.now();
 
+  // 动态计算底部外边距
+  int _activeInputIdx = 0;
+
+  double get _marginBottom {
+    double currBottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    if (currBottomInset == 0) {
+      return 0;
+    } else {
+      return 130 + _activeInputIdx * 70;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: 404,
+      margin: EdgeInsets.only(bottom: _marginBottom),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(
@@ -42,7 +58,8 @@ class _RecordFormState extends State<RecordForm> {
             // 入/出 -- radio group
             AnimatedButtonBar(
               radius: 8,
-              innerVerticalPadding: 16,
+              innerVerticalPadding: 12,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
               backgroundColor: Colors.white,
               foregroundColor: Colors.blue.shade100,
               borderColor: Colors.blue,
@@ -95,30 +112,73 @@ class _RecordFormState extends State<RecordForm> {
                 ),
               ],
             ),
-            // 备注 - desc
-            TextField(
-              controller: _descController,
-              maxLength: 50,
-              keyboardType: TextInputType.number,
-              onChanged: (s) {
-                print(s);
-              },
-              decoration: InputDecoration(
-                labelText: '备注',
-                hintText: '请输入备注(可选)',
-                suffixIcon: IconButton(
-                  onPressed: () => _descController.clear(),
-                  icon: const Icon(Icons.clear),
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+            // 金额 - amount - (paddingBottom: 130px)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              child: TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onTap: () => setState(() {
+                  _activeInputIdx = 0;
+                }),
+                decoration: const InputDecoration(
+                  labelText: '金额',
+                  hintText: '请输入金额(暂不支持小数)',
+                  contentPadding: EdgeInsets.fromLTRB(12, 20, 12, 12),
+                  suffixText: '元',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
                 ),
               ),
             ),
-            Text(isIncome ? 'true' : 'false'),
+            // 备注 - desc - (paddingBottom: 200px)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              child: TextField(
+                controller: _descController,
+                maxLength: 50,
+                keyboardType: TextInputType.text,
+                onTap: () => setState(() {
+                  _activeInputIdx = 1;
+                }),
+                decoration: InputDecoration(
+                  labelText: '备注',
+                  hintText: '请输入备注(可选)',
+                  contentPadding: const EdgeInsets.fromLTRB(12, 20, 12, 12),
+                  suffixIcon: IconButton(
+                    onPressed: () => _descController.clear(),
+                    icon: const Icon(Icons.clear),
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+            ),
+            // 确认 - (height: 70px)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              child: SizedBox(
+                height: 50,
+                child: FractionallySizedBox(
+                  widthFactor: 1,
+                  heightFactor: 1,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add_task),
+                    label: const Text('确认'),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
