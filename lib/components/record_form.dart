@@ -1,6 +1,8 @@
 import 'package:animated_button_bar/animated_button_bar.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wohuaqianlema/scripts/record_manager.dart';
 
 class RecordForm extends StatefulWidget {
   const RecordForm({super.key});
@@ -14,17 +16,16 @@ class _RecordFormState extends State<RecordForm> {
   bool isIncome = false;
 
   // 金额
-  double amount = 0.0;
   final _amountController = TextEditingController();
-
-  // 方式
-  String method = '';
 
   // 描述
   final _descController = TextEditingController();
 
+  // 方式
+  // String method = '';
+
   // 日期
-  DateTime date = DateTime.now();
+  // DateTime date = DateTime.now();
 
   // 动态计算底部外边距
   int _activeInputIdx = 0;
@@ -36,6 +37,23 @@ class _RecordFormState extends State<RecordForm> {
       return 0;
     } else {
       return 130 + _activeInputIdx * 70;
+    }
+  }
+
+  // 计算当前表单的数据
+  Future<void> submitForm() async {
+    double? amount = double.tryParse(_amountController.text.trim());
+
+    if (amount == null) {
+      BotToast.showSimpleNotification(title: '请输入正确的金额!');
+    } else {
+      bool ifInsertOk = await RecordManager.insert(
+        isIncome: isIncome,
+        amount: amount,
+        desc: _descController.text.trim(),
+      );
+
+      BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
     }
   }
 
@@ -172,7 +190,7 @@ class _RecordFormState extends State<RecordForm> {
                   widthFactor: 1,
                   heightFactor: 1,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: submitForm,
                     icon: const Icon(Icons.add_task),
                     label: const Text('确认'),
                   ),

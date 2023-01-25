@@ -45,6 +45,12 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             ElevatedButton(
+              child: Text('点击查询数据'),
+              onPressed: () {
+                RecordManager.query();
+              },
+            ),
+            ElevatedButton(
               child: Text('点击删除数据表'),
               onPressed: () {
                 RecordManager.drop('record');

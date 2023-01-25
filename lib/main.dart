@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:wohuaqianlema/home_page.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'PingFang',
       ),
       home: const HomePage(),
+      builder: BotToastInit(),
     );
   }
 }

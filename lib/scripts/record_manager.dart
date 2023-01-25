@@ -17,11 +17,10 @@ class _Constants {
   static const String sqlCreateRecordTable = '''
     CREATE TABLE IF NOT EXISTS $tableName (
       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-      dateTime TEXT(20) NOT NULL,
+      isIncome INTEGER NOT NULL,
       amount REAL NOT NULL,
-      inout INTEGER NOT NULL,
-      method TEXT(10),
-      desc TEXT(100)
+      desc TEXT(100),
+      timestamp INTEGER NOT NULL
     );
   ''';
 
@@ -45,9 +44,18 @@ class RecordManager {
   }
 
   /// 检查数据库是否已打开 (未打开则打印错误信息)
-  static Future<bool> _checkIfAvailable({String desc = '自检'}) async {
+  static Future<bool> _checkIfAvailable({
+    String desc = '自检',
+    bool autoOpen = false,
+  }) async {
     if (!isOpen()) {
       print('[$desc] 数据库未连接!');
+
+      if (autoOpen) {
+        await init();
+        return true;
+      }
+
       return false;
     }
 
@@ -95,11 +103,29 @@ class RecordManager {
     return [];
   }
 
-  /// todo 插入数据
-  static Future<void> insert() async {
-    bool available = await _checkIfAvailable(desc: '插入');
+  /// 插入数据
+  static Future<bool> insert({
+    required bool isIncome,
+    required double amount,
+    String? desc,
+    int? timestamp,
+  }) async {
+    bool available = await _checkIfAvailable(desc: '插入', autoOpen: true);
 
-    if (available) {}
+    if (available) {
+      try {
+        await _db?.insert(_Constants.tableName, {
+          "isIncome": isIncome ? 1 : 0,
+          "amount": amount,
+          "desc": desc ?? "",
+          "timestamp": DateTime.now().millisecondsSinceEpoch
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
   }
 
   /// todo 删除数据 返回删除的条目数
@@ -113,9 +139,13 @@ class RecordManager {
 
   /// todo 查询数据
   static Future<void> query() async {
-    bool available = await _checkIfAvailable(desc: '查询');
+    bool available = await _checkIfAvailable(desc: '查询', autoOpen: true);
 
-    if (available) {}
+    if (available) {
+      _db?.query(_Constants.tableName).then((value) {
+        print("data in db: $value");
+      });
+    }
   }
 
   /// todo 更新数据
@@ -137,6 +167,7 @@ class RecordManager {
     return 0;
   }
 
+  /// 删除数据表 - 全表删除
   static Future<bool> drop(String tableName) async {
     bool available = await _checkIfAvailable(desc: '删表');
 
@@ -145,8 +176,12 @@ class RecordManager {
           ?.execute(_Constants.sqlDropRecordTable)
           .then((v) => print('[删除表] 删除表完成!'))
           .catchError((err) {
-        print(err);
+        print("[删除表] 删除表出错! $err");
       });
+
+      _db?.close();
+      _db = null;
+
       return true;
     }
 
