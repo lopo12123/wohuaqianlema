@@ -41,7 +41,7 @@ class _RecordFormState extends State<RecordForm> {
   }
 
   // 计算当前表单的数据
-  Future<void> submitForm() async {
+  void submitForm(BuildContext ctx) async {
     double? amount = double.tryParse(_amountController.text.trim());
 
     if (amount == null) {
@@ -54,6 +54,8 @@ class _RecordFormState extends State<RecordForm> {
       );
 
       BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
+
+      if (ifInsertOk) Navigator.of(ctx).pop(true);
     }
   }
 
@@ -190,7 +192,7 @@ class _RecordFormState extends State<RecordForm> {
                   widthFactor: 1,
                   heightFactor: 1,
                   child: ElevatedButton.icon(
-                    onPressed: submitForm,
+                    onPressed: () => submitForm(context),
                     icon: const Icon(Icons.add_task),
                     label: const Text('确认'),
                   ),

@@ -22,10 +22,10 @@ class _RecordPageState extends State<RecordPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: SwipeButton.expand(
                   width: 250,
-                  thumb: Icon(
+                  thumb: const Icon(
                     Icons.double_arrow_rounded,
                     color: Colors.white,
                   ),
@@ -40,12 +40,18 @@ class _RecordPageState extends State<RecordPage> {
                     ),
                   ),
                   onSwipe: () {
-                    showMaterialModalBottomSheet(
-                        context: context,
-                        backgroundColor: Colors.transparent,
-                        builder: (v) {
-                          return const RecordForm();
-                        });
+                    showMaterialModalBottomSheet<bool?>(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (v) {
+                        return const RecordForm();
+                      },
+                    ).then((addNew) {
+                      if (addNew == true) {
+                        // todo
+                        print("刷新页面列表数据");
+                      }
+                    });
                   },
                 ),
               )
