@@ -103,6 +103,7 @@ class RecordManager {
     return [];
   }
 
+  // region 插入
   /// 插入数据
   static Future<bool> insert({
     required bool isIncome,
@@ -128,16 +129,31 @@ class RecordManager {
     return false;
   }
 
-  /// todo 删除数据 返回删除的条目数
-  static Future<int> delete() async {
+  // endregion
+
+  // region 删除
+  /// 删除数据 根据id删除
+  static Future<bool> delete(int id) async {
     bool available = await _checkIfAvailable(desc: '删除');
 
-    if (available) {}
-
-    return 0;
+    if (available) {
+      try {
+        await _db?.delete(_Constants.tableName, where: "id=$id");
+        return true;
+      } catch (e) {
+        print("[删除] 删除数据出错! $e");
+        return false;
+      }
+    }
+    return false;
   }
 
+  // endregion
+
+  // region 查询
+
   /// todo 查询数据
+  /// 查询全部数据
   static Future<void> query() async {
     bool available = await _checkIfAvailable(desc: '查询', autoOpen: true);
 
@@ -148,12 +164,17 @@ class RecordManager {
     }
   }
 
+  // endregion
+
+  // region 修改
   /// todo 更新数据
   static Future<void> update() async {
     bool available = await _checkIfAvailable(desc: '更新');
 
     if (available) {}
   }
+
+  // endregion
 
   /// 清空数据表 - 返回删除的条目数
   static Future<int> clear() async {
