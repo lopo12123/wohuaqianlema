@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../scripts/utils.dart';
 import '../scripts/record_manager.dart';
 
@@ -18,6 +19,17 @@ class _SettingPageState extends State<SettingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+              child: Text('震颤测试 (无效)'),
+              onPressed: () {
+                // HapticFeedback.vibrate();
+                // HapticFeedback.selectionClick();
+                // HapticFeedback.heavyImpact();
+                // HapticFeedback.mediumImpact();
+                // HapticFeedback.lightImpact();
+              },
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               child: Text('点击初始化数据库'),
