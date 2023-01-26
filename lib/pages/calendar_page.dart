@@ -26,6 +26,8 @@ class _CalendarPageState extends State<CalendarPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green.shade300,
