@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// 日期选择器
@@ -28,4 +29,11 @@ String formatDate(DateTime t) {
 // 格式化时间
 String formatTime(TimeOfDay t) {
   return '${t.hour < 10 ? '0${t.hour}' : t.hour}:${t.minute < 10 ? '0${t.minute}' : t.minute}';
+}
+
+/// 仅在debug模式下打印
+void safePrint(Object? o, {String? condition = '默认'}) {
+  if (kDebugMode) {
+    print("[$condition] $o");
+  }
 }

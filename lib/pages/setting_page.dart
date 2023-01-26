@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:wohuaqianlema/scripts/db.dart';
 import '../scripts/utils.dart';
-import '../scripts/record_manager.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -20,50 +19,39 @@ class _SettingPageState extends State<SettingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
-              child: Text('震颤测试 (无效)'),
-              onPressed: () {
-                // HapticFeedback.vibrate();
-                // HapticFeedback.selectionClick();
-                // HapticFeedback.heavyImpact();
-                // HapticFeedback.mediumImpact();
-                // HapticFeedback.lightImpact();
-              },
-            ),
-            ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('点击初始化数据库'),
+              child: Text('查询全部数据表'),
               onPressed: () {
-                RecordManager.init().then((tables) => print('[测试] 初始化完成'));
+                DBOperator.testQueryTableList();
               },
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('点击查询数据表'),
-              onPressed: () {
-                RecordManager.getValidTableNames()
-                    .then((tables) => print('tables: $tables'));
-              },
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('点击关闭数据库'),
-              onPressed: () {
-                RecordManager.dispose().then((v) => print('[测试] 关闭数据库完成'));
-              },
-            ),
-            ElevatedButton(
-              child: Text('点击查询全部数据'),
-              onPressed: () {
-                RecordManager.query();
-              },
-            ),
-            ElevatedButton(
-              child: Text('点击删除目标数据'),
-              onPressed: () {
-                RecordManager.delete(1).then((value) => print("删除测试: $value"));
-              },
-            ),
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            //   child: Text('点击查询数据表'),
+            //   onPressed: () {
+            //     RecordManager.getValidTableNames()
+            //         .then((tables) => print('tables: $tables'));
+            //   },
+            // ),
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            //   child: Text('点击关闭数据库'),
+            //   onPressed: () {
+            //     RecordManager.dispose().then((v) => print('[测试] 关闭数据库完成'));
+            //   },
+            // ),
+            // ElevatedButton(
+            //   child: Text('点击查询全部数据'),
+            //   onPressed: () {
+            //     RecordManager.query();
+            //   },
+            // ),
+            // ElevatedButton(
+            //   child: Text('点击删除目标数据'),
+            //   onPressed: () {
+            //     RecordManager.delete(1).then((value) => print("删除测试: $value"));
+            //   },
+            // ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
               child: Text('点击选择日期'),
@@ -82,21 +70,6 @@ class _SettingPageState extends State<SettingPage> {
                   print('picked: $value');
                   if (value != null) print('picked: ${formatTime(value)}');
                 });
-              },
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('点击删除数据表'),
-              onPressed: () {
-                RecordManager.drop('record');
-              },
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('点击清空数据库'),
-              onPressed: () {
-                RecordManager.clear()
-                    .then((count) => print('[测试] 清空数据库完成, 删除条目数: $count'));
               },
             ),
           ],
