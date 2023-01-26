@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../components/record_form.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -25,11 +28,32 @@ class _CalendarPageState extends State<CalendarPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red.shade100,
+        backgroundColor: Colors.green.shade300,
         elevation: 0,
-        title: const Text('日历 Calendar'),
+        title: const Text(
+          '快去花钱! 快去花钱! 快去花钱!',
+          style: TextStyle(fontSize: 16),
+        ),
       ),
-      backgroundColor: Colors.red.shade50,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {
+          showMaterialModalBottomSheet<bool?>(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (v) {
+              return const RecordForm();
+            },
+          ).then((addNew) {
+            if (addNew == true) {
+              // todo
+              print("刷新页面列表数据");
+            }
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
+      backgroundColor: Colors.green.shade50,
       body: Column(
         children: [
           TableCalendar(
@@ -63,7 +87,7 @@ class _CalendarPageState extends State<CalendarPage>
           Container(
             height: 1,
             margin: const EdgeInsets.all(8),
-            color: Colors.grey,
+            color: Colors.green,
           ),
           Text(
             '${_selectedDay.year}年${_selectedDay.month}月${_selectedDay.day}日',

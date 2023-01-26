@@ -16,7 +16,7 @@ class _RecordPageState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue.shade50,
+        backgroundColor: Colors.orange.shade50,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,

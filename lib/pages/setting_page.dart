@@ -13,24 +13,24 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade50,
+      backgroundColor: Colors.green.shade50,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('点击查询数据表'),
+              child: Text('点击初始化数据库'),
               onPressed: () {
-                RecordManager.getValidTableNames()
-                    .then((tables) => print('tables: $tables'));
+                RecordManager.init().then((tables) => print('[测试] 初始化完成'));
               },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('点击初始化数据库'),
+              child: Text('点击查询数据表'),
               onPressed: () {
-                RecordManager.init().then((tables) => print('[测试] 初始化完成'));
+                RecordManager.getValidTableNames()
+                    .then((tables) => print('tables: $tables'));
               },
             ),
             ElevatedButton(
