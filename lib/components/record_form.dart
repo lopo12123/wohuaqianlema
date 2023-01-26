@@ -81,8 +81,8 @@ class _RecordFormState extends State<RecordForm> {
               innerVerticalPadding: 12,
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
               backgroundColor: Colors.white,
-              foregroundColor: Colors.blue.shade100,
-              borderColor: Colors.blue,
+              foregroundColor: Colors.green.shade100,
+              borderColor: Colors.green,
               children: [
                 ButtonBarEntry(
                   child: Row(
@@ -90,12 +90,13 @@ class _RecordFormState extends State<RecordForm> {
                     children: [
                       Icon(
                         Icons.indeterminate_check_box_outlined,
-                        color: isIncome ? Colors.blue.shade100 : Colors.blue,
+                        color: isIncome ? Colors.green.shade100 : Colors.green,
                       ),
                       Text(
-                        '支出',
+                        '花了',
                         style: TextStyle(
-                          color: isIncome ? Colors.blue.shade100 : Colors.blue,
+                          color:
+                              isIncome ? Colors.green.shade100 : Colors.green,
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -113,12 +114,13 @@ class _RecordFormState extends State<RecordForm> {
                     children: [
                       Icon(
                         Icons.add_box_outlined,
-                        color: isIncome ? Colors.blue : Colors.blue.shade100,
+                        color: isIncome ? Colors.green : Colors.green.shade100,
                       ),
                       Text(
-                        '收入',
+                        '赚了',
                         style: TextStyle(
-                          color: isIncome ? Colors.blue : Colors.blue.shade100,
+                          color:
+                              isIncome ? Colors.green : Colors.green.shade100,
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -148,10 +150,13 @@ class _RecordFormState extends State<RecordForm> {
                   contentPadding: EdgeInsets.fromLTRB(12, 20, 12, 12),
                   suffixText: '元',
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                    borderSide: BorderSide(color: Colors.green),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
                   ),
                 ),
               ),
@@ -172,13 +177,19 @@ class _RecordFormState extends State<RecordForm> {
                   contentPadding: const EdgeInsets.fromLTRB(12, 20, 12, 12),
                   suffixIcon: IconButton(
                     onPressed: () => _descController.clear(),
-                    icon: const Icon(Icons.clear),
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.green,
+                    ),
                   ),
                   border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                    borderSide: BorderSide(color: Colors.green),
                   ),
                   enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
                   ),
                 ),
               ),
@@ -192,6 +203,8 @@ class _RecordFormState extends State<RecordForm> {
                   widthFactor: 1,
                   heightFactor: 1,
                   child: ElevatedButton.icon(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () => submitForm(context),
                     icon: const Icon(Icons.add_task),
                     label: const Text('确认'),
