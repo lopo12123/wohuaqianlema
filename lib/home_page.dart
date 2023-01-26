@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
           setState(() => _tabIdx = idx);
         },
         barItems: [
-          BarItem(title: '记录', icon: Icons.calendar_month_outlined),
+          BarItem(title: '全览', icon: Icons.calendar_month_outlined),
           BarItem(title: '统计', icon: Icons.insert_chart_outlined),
           BarItem(title: '设置', icon: Icons.settings_outlined),
         ],
