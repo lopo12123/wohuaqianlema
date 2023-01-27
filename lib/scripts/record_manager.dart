@@ -113,6 +113,8 @@ class RecordManager {
   }) async {
     bool available = await _checkIfAvailable(desc: '插入', autoOpen: true);
 
+    // (String, String) a = ('', '');
+    
     if (available) {
       try {
         await _db?.insert(_Constants.tableName, {
