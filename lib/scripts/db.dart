@@ -51,6 +51,21 @@ class _DBTag {
       await db.insert(tableName, {"name": tagName});
       return true;
     } catch (err) {
+      safePrint(err, condition: '新增标签');
+      return false;
+    }
+  }
+
+  /// 删除标签
+  static Future<bool> delete({
+    required Database db,
+    required int tagId,
+  }) async {
+    try {
+      await db.delete(tableName, where: 'id=$tagId');
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '删除标签');
       return false;
     }
   }
@@ -164,9 +179,18 @@ class DBController {
   }
 
   /// 删除标签
+  static Future<bool> deleteTag(int tagId) async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBTag.delete(db: _db!, tagId: tagId);
+  }
+
   /// 查询标签
-  static Future<List<Map<String, Object?>>> queryTag(
-      {int? tagId, String? nameLike}) async {
+  static Future<List<Map<String, Object?>>> queryTag({
+    int? tagId,
+    String? nameLike,
+  }) async {
     if (!await _prelude()) return [];
     assert(_db != null);
 
