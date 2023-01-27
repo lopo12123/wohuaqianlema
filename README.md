@@ -10,15 +10,5 @@ navbar https://pub.dev/packages/sliding_clipped_nav_bar
 speed_dial https://pub.dev/packages/simple_speed_dial  
 底部弹出 https://pub.dev/packages/modal_bottom_sheet
 
-数据库表设计
 
-### records
-
-| 字段       | 数据类型      | 描述                  |
-|----------|-----------|---------------------|
-| id       | INTEGER   | 主键                  |
-| inout    | INTEGER   | 0 支出 / 1 收入         |
-| amount   | REAL      | 金额                  |
-| method   | Text(10)  | 方式 (可自定义文本标签)       |
-| dateTime | Text(20)  | 日期 YYYY-MM-DD_HH:mm |
-| desc     | Text(100) | 记录描述                |
+[数据库表设计](./design/db.xlsx)
