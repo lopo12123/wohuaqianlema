@@ -69,7 +69,7 @@ class _DBMeta {
   /// 重置自增表
   static Future<bool> resetSeq(Database db) async {
     try {
-      db.update(tableNameSeq, {"seq": 1});
+      db.update(tableNameSeq, {"seq": 0});
       return true;
     } catch (err) {
       safePrint(err, condition: '重置自增表');
@@ -149,7 +149,7 @@ class _DBTag {
     }
   }
 
-  /// 清空标签并重置自增为1
+  /// 清空标签并重置自增为0
   static Future<bool> clear(Database db) async {
     try {
       await db.delete(tableName);
@@ -161,6 +161,19 @@ class _DBTag {
       safePrint(err, condition: '清空标签');
       return false;
     }
+  }
+}
+
+class _DBRecord {
+  /// 表名
+  static const tableName = 'record';
+
+  /// 查询记录
+  static Future<List<Map<String, Object?>>> query({
+    required Database db,
+    bool? isIncome,
+  }) async {
+    return [];
   }
 }
 

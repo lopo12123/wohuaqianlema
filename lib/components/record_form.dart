@@ -238,14 +238,21 @@ class _RecordFormState extends State<RecordForm> {
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                      border: Border.fromBorderSide(
+                    decoration: BoxDecoration(
+                      color: dropdownList.length > 1
+                          ? Colors.transparent
+                          : Colors.grey.shade200,
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      border: const Border.fromBorderSide(
                         BorderSide(color: Colors.green),
                       ),
                     ),
                     child: DropdownButton(
-                      hint: const Text('选择标签'),
+                      hint: const Text('选择标签(可选)'),
+                      disabledHint: const Text(
+                        '暂无可用标签, 请先在设置页创建',
+                        style: TextStyle(color: Colors.grey),
+                      ),
                       style: const TextStyle(color: Colors.green),
                       icon: const Icon(
                         Icons.sell_outlined,
@@ -253,8 +260,8 @@ class _RecordFormState extends State<RecordForm> {
                       ),
                       isExpanded: true,
                       underline: Container(color: Colors.transparent),
-                      items: dropdownList,
-                      value: tagId,
+                      items: dropdownList.length > 1 ? dropdownList : null,
+                      value: dropdownList.length > 1 ? tagId : null,
                       onChanged: (selectedTagId) {
                         setState(() {
                           if (selectedTagId != null) tagId = selectedTagId;
