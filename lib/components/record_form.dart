@@ -83,20 +83,24 @@ class _RecordFormState extends State<RecordForm> {
 
   // 计算当前表单的数据
   void submitForm(BuildContext ctx) async {
-    double? amount = double.tryParse(_amountController.text.trim());
-
-    if (amount == null) {
+    String amountStr = _amountController.text.trim();
+    if (!RegExp(r'^(0|[1-9])[0-9]*(\.[0-9]+)$').hasMatch(amountStr)) {
       BotToast.showSimpleNotification(title: '请输入正确的金额!');
     } else {
-      // bool ifInsertOk = await RecordManager.insert(
-      //   isIncome: isIncome,
-      //   amount: amount,
-      //   desc: _descController.text.trim(),
-      // );
+      double? amount = double.tryParse(amountStr);
+      if (amount == null) {
+        BotToast.showSimpleNotification(title: '请输入正确的金额!');
+      } else {
+        // bool ifInsertOk = await RecordManager.insert(
+        //   isIncome: isIncome,
+        //   amount: amount,
+        //   desc: _descController.text.trim(),
+        // );
 
-      // BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
+        // BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
 
-      // if (ifInsertOk) Navigator.of(ctx).pop(true);
+        // if (ifInsertOk) Navigator.of(ctx).pop(true);
+      }
     }
   }
 
@@ -268,14 +272,17 @@ class _RecordFormState extends State<RecordForm> {
               child: TextField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: [
+                  // 全串匹配 r'^(0|[1-9])[0-9]*(\.[0-9]+)$'
+                  FilteringTextInputFormatter.allow(RegExp(r'[.0-9]')),
+                ],
                 style: const TextStyle(color: Colors.green),
                 onTap: () => setState(() {
                   _activeInputIdx = 0;
                 }),
                 decoration: const InputDecoration(
                   labelText: '金额',
-                  hintText: '请输入金额(暂不支持小数)',
+                  hintText: '请输入金额',
                   contentPadding: EdgeInsets.fromLTRB(12, 20, 12, 12),
                   suffixIcon: Icon(
                     Icons.currency_yuan_outlined,
