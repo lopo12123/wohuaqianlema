@@ -3,6 +3,7 @@ import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:wohuaqianlema/pages/calendar_page.dart';
 import 'package:wohuaqianlema/pages/overview_page.dart';
 import 'package:wohuaqianlema/pages/setting_page.dart';
+import 'package:wohuaqianlema/pages/test_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
           BarItem(title: '全览', icon: Icons.calendar_month_outlined),
           BarItem(title: '统计', icon: Icons.insert_chart_outlined),
           BarItem(title: '设置', icon: Icons.settings_outlined),
+          BarItem(title: '测试', icon: Icons.warning_outlined),
         ],
       ),
       body: PageView(
@@ -41,6 +43,7 @@ class _HomePageState extends State<HomePage> {
           CalendarPage(),
           OverviewPage(),
           SettingPage(),
+          TestPage(),
         ],
       ),
     );
