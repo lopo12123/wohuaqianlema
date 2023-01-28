@@ -112,8 +112,6 @@ class RecordManager {
     int? timestamp,
   }) async {
     bool available = await _checkIfAvailable(desc: '插入', autoOpen: true);
-
-    // (String, String) a = ('', '');
     
     if (available) {
       try {

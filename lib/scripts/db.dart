@@ -224,6 +224,13 @@ class DBController {
   }
 
   /// 新增记录
+  static Future<bool> addRecord() async {
+    return false;
+  }
+
+  /// 删除记录
+  /// 查询记录
+  /// 修改记录
 
   /// 测试
   static Future<void> testQueryTableList() async {
