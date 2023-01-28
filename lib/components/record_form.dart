@@ -3,6 +3,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wohuaqianlema/scripts/record_manager.dart';
+import 'package:wohuaqianlema/scripts/utils.dart';
 
 class RecordForm extends StatefulWidget {
   const RecordForm({super.key});
@@ -12,20 +13,27 @@ class RecordForm extends StatefulWidget {
 }
 
 class _RecordFormState extends State<RecordForm> {
+  _RecordFormState() {
+    // todo 获取可用tag列表
+  }
+
   // 是否是收入
   bool isIncome = false;
+
+  // 记录时间
+  DateTime recordTime = DateTime.now();
+
+  // 标签id
+  int tagId = 0;
+
+  // 标签名
+  String tagName = '未选择';
 
   // 金额
   final _amountController = TextEditingController();
 
   // 描述
   final _descController = TextEditingController();
-
-  // 方式
-  // String method = '';
-
-  // 日期
-  // DateTime date = DateTime.now();
 
   // 动态计算底部外边距
   int _activeInputIdx = 0;
@@ -62,7 +70,7 @@ class _RecordFormState extends State<RecordForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 404,
+      height: 550, // 50 + 10 * 2 (单项高度)
       margin: EdgeInsets.only(bottom: _marginBottom),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -89,11 +97,11 @@ class _RecordFormState extends State<RecordForm> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.indeterminate_check_box_outlined,
+                        Icons.sentiment_satisfied_outlined,
                         color: isIncome ? Colors.green.shade100 : Colors.green,
                       ),
                       Text(
-                        '花了',
+                        '支出',
                         style: TextStyle(
                           color:
                               isIncome ? Colors.green.shade100 : Colors.green,
@@ -113,11 +121,11 @@ class _RecordFormState extends State<RecordForm> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.add_box_outlined,
+                        Icons.sentiment_dissatisfied_outlined,
                         color: isIncome ? Colors.green : Colors.green.shade100,
                       ),
                       Text(
-                        '赚了',
+                        '收入',
                         style: TextStyle(
                           color:
                               isIncome ? Colors.green : Colors.green.shade100,
@@ -133,6 +141,102 @@ class _RecordFormState extends State<RecordForm> {
                   },
                 ),
               ],
+            ),
+            // 时间
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              child: SizedBox(
+                height: 50,
+                child: FractionallySizedBox(
+                  widthFactor: 1,
+                  heightFactor: 1,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.green),
+                    ),
+                    onPressed: () async {
+                      try {
+                        DateTime? date = await pickDateLocal(context: context);
+                        if (date == null) {
+                          return;
+                        } else {
+                          TimeOfDay? time =
+                              await pickTimeLocal(context: context);
+                          if (time == null) {
+                            return;
+                          }
+                          date = date.add(Duration(
+                            hours: time.hour,
+                            minutes: time.minute,
+                          ));
+
+                          setState(() {
+                            recordTime = date!;
+                          });
+                        }
+                      } catch (err) {
+                        safePrint(err, condition: '选择时间');
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.schedule_outlined,
+                      color: Colors.green,
+                    ),
+                    label: Text(
+                      '选择时间 (${formatDateTime(recordTime)})',
+                      style: const TextStyle(color: Colors.green),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // 标签
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              child: SizedBox(
+                height: 50,
+                child: FractionallySizedBox(
+                  widthFactor: 1,
+                  heightFactor: 1,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.green),
+                    ),
+                    onPressed: () async {
+                      try {
+                        DateTime? date = await pickDateLocal(context: context);
+                        if (date == null) {
+                          return;
+                        } else {
+                          TimeOfDay? time =
+                              await pickTimeLocal(context: context);
+                          if (time == null) {
+                            return;
+                          }
+                          date = date.add(Duration(
+                            hours: time.hour,
+                            minutes: time.minute,
+                          ));
+
+                          setState(() {
+                            recordTime = date!;
+                          });
+                        }
+                      } catch (err) {
+                        safePrint(err, condition: '选择时间');
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.sell_outlined,
+                      color: Colors.green,
+                    ),
+                    label: Text(
+                      '标签 ($tagName)',
+                      style: const TextStyle(color: Colors.green),
+                    ),
+                  ),
+                ),
+              ),
             ),
             // 金额 - amount - (paddingBottom: 130px)
             Padding(
@@ -172,7 +276,7 @@ class _RecordFormState extends State<RecordForm> {
                   _activeInputIdx = 1;
                 }),
                 decoration: InputDecoration(
-                  labelText: '备注',
+                  labelText: '备注(可选)',
                   hintText: '请输入备注(可选)',
                   contentPadding: const EdgeInsets.fromLTRB(12, 20, 12, 12),
                   suffixIcon: IconButton(
