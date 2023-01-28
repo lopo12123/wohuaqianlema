@@ -2,7 +2,7 @@ import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wohuaqianlema/scripts/record_manager.dart';
+import 'package:wohuaqianlema/scripts/db.dart';
 import 'package:wohuaqianlema/scripts/utils.dart';
 
 class RecordForm extends StatefulWidget {
@@ -14,7 +14,40 @@ class RecordForm extends StatefulWidget {
 
 class _RecordFormState extends State<RecordForm> {
   _RecordFormState() {
-    // todo 获取可用tag列表
+    DBController.queryTag().then((tagList) {
+      setState(() {
+        validTagList = tagList;
+      });
+      safePrint(tagList, condition: '可用Tag列表');
+    });
+  }
+
+  // 下拉选择列表 Array<{id: number, name: string}>
+  List<Map<String, Object?>> validTagList = [];
+
+  List<DropdownMenuItem<int>> get dropdownList {
+    List<DropdownMenuItem<int>> tagList = validTagList
+        .map((tagInfo) => DropdownMenuItem(
+              value: tagInfo['id'] as int,
+              child: Text(
+                tagInfo['name'].toString(),
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ))
+        .toList();
+
+    tagList.insert(
+      0,
+      const DropdownMenuItem(
+        value: 0,
+        child: Text(
+          '选择标签(可选)',
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
+    );
+
+    return tagList;
   }
 
   // 是否是收入
@@ -27,7 +60,7 @@ class _RecordFormState extends State<RecordForm> {
   int tagId = 0;
 
   // 标签名
-  String tagName = '未选择';
+  String tagName = '选择标签(可选)';
 
   // 金额
   final _amountController = TextEditingController();
@@ -55,15 +88,15 @@ class _RecordFormState extends State<RecordForm> {
     if (amount == null) {
       BotToast.showSimpleNotification(title: '请输入正确的金额!');
     } else {
-      bool ifInsertOk = await RecordManager.insert(
-        isIncome: isIncome,
-        amount: amount,
-        desc: _descController.text.trim(),
-      );
+      // bool ifInsertOk = await RecordManager.insert(
+      //   isIncome: isIncome,
+      //   amount: amount,
+      //   desc: _descController.text.trim(),
+      // );
 
-      BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
+      // BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
 
-      if (ifInsertOk) Navigator.of(ctx).pop(true);
+      // if (ifInsertOk) Navigator.of(ctx).pop(true);
     }
   }
 
@@ -198,41 +231,32 @@ class _RecordFormState extends State<RecordForm> {
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   heightFactor: 1,
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.green),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                      border: Border.fromBorderSide(
+                        BorderSide(color: Colors.green),
+                      ),
                     ),
-                    onPressed: () async {
-                      try {
-                        DateTime? date = await pickDateLocal(context: context);
-                        if (date == null) {
-                          return;
-                        } else {
-                          TimeOfDay? time =
-                              await pickTimeLocal(context: context);
-                          if (time == null) {
-                            return;
-                          }
-                          date = date.add(Duration(
-                            hours: time.hour,
-                            minutes: time.minute,
-                          ));
-
-                          setState(() {
-                            recordTime = date!;
-                          });
-                        }
-                      } catch (err) {
-                        safePrint(err, condition: '选择时间');
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.sell_outlined,
-                      color: Colors.green,
-                    ),
-                    label: Text(
-                      '标签 ($tagName)',
+                    child: DropdownButton(
+                      hint: const Text('选择标签'),
                       style: const TextStyle(color: Colors.green),
+                      icon: const Icon(
+                        Icons.sell_outlined,
+                        color: Colors.green,
+                      ),
+                      isExpanded: true,
+                      underline: Container(color: Colors.transparent),
+                      items: dropdownList,
+                      value: tagId,
+                      onChanged: (selectedTagId) {
+                        setState(() {
+                          if (selectedTagId != null) tagId = selectedTagId;
+                        });
+                        safePrint(selectedTagId, condition: 'dropdown');
+                      },
                     ),
                   ),
                 ),
@@ -245,6 +269,7 @@ class _RecordFormState extends State<RecordForm> {
                 controller: _amountController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                style: const TextStyle(color: Colors.green),
                 onTap: () => setState(() {
                   _activeInputIdx = 0;
                 }),
@@ -252,7 +277,10 @@ class _RecordFormState extends State<RecordForm> {
                   labelText: '金额',
                   hintText: '请输入金额(暂不支持小数)',
                   contentPadding: EdgeInsets.fromLTRB(12, 20, 12, 12),
-                  suffixText: '元',
+                  suffixIcon: Icon(
+                    Icons.currency_yuan_outlined,
+                    color: Colors.green,
+                  ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.green),
                   ),
@@ -272,6 +300,7 @@ class _RecordFormState extends State<RecordForm> {
                 controller: _descController,
                 maxLength: 50,
                 keyboardType: TextInputType.text,
+                style: const TextStyle(color: Colors.green),
                 onTap: () => setState(() {
                   _activeInputIdx = 1;
                 }),
