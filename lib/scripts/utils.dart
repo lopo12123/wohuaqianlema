@@ -31,6 +31,11 @@ String formatTime(TimeOfDay t) {
   return '${t.hour < 10 ? '0${t.hour}' : t.hour}:${t.minute < 10 ? '0${t.minute}' : t.minute}';
 }
 
+// 格式化 日期时间
+String formatDateTime(DateTime t) {
+  return '${t.year}-${t.month < 10 ? '0${t.month}' : t.month}-${t.day < 10 ? '0${t.day}' : t.day} ${t.hour < 10 ? '0${t.hour}' : t.hour}:${t.minute < 10 ? '0${t.minute}' : t.minute}';
+}
+
 /// 仅在debug模式下打印
 void safePrint(Object? o, {String? condition = '默认'}) {
   if (kDebugMode) {
