@@ -67,6 +67,13 @@ class _SettingPageState extends State<SettingPage> {
                 DBController.deleteTag(1).then((value) => safePrint(value, condition: '测试:删除标签 id=1'));
               },
             ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              child: Text('编辑标签 id=1'),
+              onPressed: () {
+                DBController.editTag(2, 'edited').then((value) => safePrint(value, condition: '测试:编辑标签 id=1'));
+              },
+            ),
           ],
         ),
       ),

@@ -95,6 +95,19 @@ class _DBTag {
       return [];
     }
   }
+
+  /// **@description** 更新 目标标签名
+  /// **@param** id 目标id <br/>
+  /// **@param** newName 新标签名 <br/>
+  static Future<bool> update(Database db, int tagId, String newName) async {
+    try {
+      await db.update(tableName, {'name': newName}, where: 'id=$tagId');
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '更新标签');
+      return false;
+    }
+  }
 }
 
 /// 数据库控制
@@ -140,21 +153,26 @@ class DBController {
       return true;
     } catch (err) {
       safePrint(err, condition: '初始化数据表');
+      return false;
     }
-    return true;
   }
 
   /// 初始化
   static Future<bool> init() async {
     try {
-      await _initDB();
-      await _initTables();
-      safePrint('初始化数据库成功', condition: '初始化');
-      return true;
+      bool dbResult = await _initDB();
+      bool tableResult = await _initTables();
+      if (dbResult && tableResult) {
+        safePrint('初始化数据库成功', condition: '初始化');
+        return true;
+      } else {
+        safePrint('DB: $dbResult ;Tables: $tableResult}', condition: '初始化');
+        return false;
+      }
     } catch (err) {
       safePrint(err, condition: '初始化');
+      return false;
     }
-    return true;
   }
 
   /// 自检, 若未初始化则(默认)先初始化数据库
@@ -198,6 +216,12 @@ class DBController {
   }
 
   /// 修改标签
+  static Future<bool> editTag(int tagId, String newName) async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBTag.update(_db!, tagId, newName);
+  }
 
   /// 新增记录
 

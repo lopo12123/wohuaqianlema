@@ -42,6 +42,7 @@ dependencies:
   get: any
   intl: ^0.17.0
   modal_bottom_sheet:
+  path:
   sliding_clipped_nav_bar:
   sqflite: 2.2.2
   flutter_swipe_button:
