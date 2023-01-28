@@ -38,6 +38,46 @@ class _DBConstants {
   static const String sqlDropTableTag = "DROP TABLE IF EXISTS tag;";
 }
 
+/// sqlite 自增表查看
+class _DBMeta {
+  /// 表名 - 安卓元数据
+  static const tableNameMeta = 'android_metadata';
+
+  /// 表名 - 自增表
+  static const tableNameSeq = 'sqlite_sequence';
+
+  /// 查询安卓元数据表
+  static Future<List<Map<String, Object?>>> queryMeta(Database db) async {
+    try {
+      return await db.query(tableNameMeta);
+    } catch (err) {
+      safePrint(err, condition: '安卓元数据表查询');
+      return [];
+    }
+  }
+
+  /// 查询自增表
+  static Future<List<Map<String, Object?>>> querySeq(Database db) async {
+    try {
+      return await db.query(tableNameSeq);
+    } catch (err) {
+      safePrint(err, condition: '自增表查询');
+      return [];
+    }
+  }
+
+  /// 重置自增表
+  static Future<bool> resetSeq(Database db) async {
+    try {
+      db.update(tableNameSeq, {"seq": 1});
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '重置自增表');
+      return false;
+    }
+  }
+}
+
 class _DBTag {
   /// 表名
   static const tableName = 'tag';
@@ -105,6 +145,20 @@ class _DBTag {
       return true;
     } catch (err) {
       safePrint(err, condition: '更新标签');
+      return false;
+    }
+  }
+
+  /// 清空标签并重置自增为1
+  static Future<bool> clear(Database db) async {
+    try {
+      await db.delete(tableName);
+      bool resetResult = await _DBMeta.resetSeq(db);
+      if (!resetResult) safePrint('重置出错', condition: '重置标签自增');
+
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '清空标签');
       return false;
     }
   }
@@ -223,6 +277,14 @@ class DBController {
     return await _DBTag.update(_db!, tagId, newName);
   }
 
+  /// 清空标签并重置自增为1
+  static Future<bool> clearAllTag() async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBTag.clear(_db!);
+  }
+
   /// 新增记录
   static Future<bool> addRecord() async {
     return false;
@@ -232,7 +294,7 @@ class DBController {
   /// 查询记录
   /// 修改记录
 
-  /// 测试
+  /// 测试 - 全部表名
   static Future<void> testQueryTableList() async {
     if (_db == null) {
       print('object');
@@ -243,5 +305,19 @@ class DBController {
         safePrint(tables, condition: '全部数据表');
       });
     }
+  }
+
+  static Future<void> testQuerySeq() async {
+    if (!await _prelude()) return;
+    assert(_db != null);
+    _DBMeta.querySeq(_db!)
+        .then((value) => safePrint(value, condition: '自增表查询'));
+  }
+
+  static Future<void> testQueryMeta() async {
+    if (!await _prelude()) return;
+    assert(_db != null);
+    _DBMeta.queryMeta(_db!)
+        .then((value) => safePrint(value, condition: '安卓元数据表查询'));
   }
 }

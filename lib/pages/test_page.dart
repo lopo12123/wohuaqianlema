@@ -15,8 +15,7 @@ class _TestPageState extends State<TestPage> {
     return Scaffold(
       backgroundColor: Colors.green.shade50,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
@@ -33,6 +32,20 @@ class _TestPageState extends State<TestPage> {
               },
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              child: Text('查询自增表'),
+              onPressed: () {
+                DBController.testQuerySeq();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              child: Text('查询安卓元数据表'),
+              onPressed: () {
+                DBController.testQueryMeta();
+              },
+            ),
+            ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text('新增标签 123'),
               onPressed: () {
@@ -43,35 +56,48 @@ class _TestPageState extends State<TestPage> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text('查询全部标签'),
               onPressed: () {
-                DBController.queryTag().then((value) => safePrint(value, condition: '测试:查询全部标签'));
+                DBController.queryTag()
+                    .then((value) => safePrint(value, condition: '测试:查询全部标签'));
               },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text('查询标签 id=1'),
               onPressed: () {
-                DBController.queryTag(tagId: 1).then((value) => safePrint(value, condition: '测试:查询标签 id=1'));
+                DBController.queryTag(tagId: 1).then(
+                    (value) => safePrint(value, condition: '测试:查询标签 id=1'));
               },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text('查询标签 name like 12'),
               onPressed: () {
-                DBController.queryTag(nameLike: '12').then((value) => safePrint(value, condition: '测试:查询标签 name like 12'));
+                DBController.queryTag(nameLike: '12').then((value) =>
+                    safePrint(value, condition: '测试:查询标签 name like 12'));
               },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text('删除标签 id=1'),
               onPressed: () {
-                DBController.deleteTag(1).then((value) => safePrint(value, condition: '测试:删除标签 id=1'));
+                DBController.deleteTag(1).then(
+                    (value) => safePrint(value, condition: '测试:删除标签 id=1'));
               },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text('编辑标签 id=1'),
               onPressed: () {
-                DBController.editTag(2, 'edited').then((value) => safePrint(value, condition: '测试:编辑标签 id=1'));
+                DBController.editTag(2, 'edited').then(
+                    (value) => safePrint(value, condition: '测试:编辑标签 id=1'));
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('清空标签'),
+              onPressed: () {
+                DBController.clearAllTag()
+                    .then((value) => safePrint(value, condition: '测试:清空标签'));
               },
             ),
           ],
