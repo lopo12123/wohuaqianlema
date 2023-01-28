@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:wohuaqianlema/scripts/range.dart';
 import 'package:wohuaqianlema/scripts/utils.dart';
 
 /// 数据库相关
@@ -83,10 +84,7 @@ class _DBTag {
   static const tableName = 'tag';
 
   /// 新增标签
-  static Future<bool> insert({
-    required Database db,
-    required String tagName,
-  }) async {
+  static Future<bool> insert(Database db, String tagName) async {
     try {
       await db.insert(tableName, {"name": tagName});
       return true;
@@ -97,10 +95,7 @@ class _DBTag {
   }
 
   /// 删除标签
-  static Future<bool> delete({
-    required Database db,
-    required int tagId,
-  }) async {
+  static Future<bool> delete(Database db, int tagId) async {
     try {
       await db.delete(tableName, where: 'id=$tagId');
       return true;
@@ -114,8 +109,8 @@ class _DBTag {
   /// **@param** id 目标id <br/>
   /// **@param** nameLike 目标标签名(模糊查询) <br/>
   /// **@return** Array<{id: number, name: string}> <br/>
-  static Future<List<Map<String, Object?>>> query({
-    required Database db,
+  static Future<List<Map<String, Object?>>> query(
+    Database db, {
     int? tagId,
     String? nameLike,
   }) async {
@@ -131,7 +126,7 @@ class _DBTag {
     try {
       return await db.query(tableName, where: where);
     } catch (err) {
-      safePrint(err, condition: '标签查询');
+      safePrint(err, condition: '查询标签');
       return [];
     }
   }
@@ -168,12 +163,25 @@ class _DBRecord {
   /// 表名
   static const tableName = 'record';
 
-  /// 查询记录
-  static Future<List<Map<String, Object?>>> query({
-    required Database db,
+  /// 查询记录 (详细条件查询)
+  static Future<List<Map<String, Object?>>> query(
+    Database db, {
     bool? isIncome,
+    RangeInt? amountRange,
+    String? descLike,
+    RangeDate? dateRange,
+    int? tagId,
   }) async {
-    return [];
+    String where;
+
+    // todo
+
+    try {
+      return [];
+    } catch (err) {
+      safePrint(err, condition: '查询记录');
+      return [];
+    }
   }
 }
 
@@ -260,7 +268,7 @@ class DBController {
     if (!await _prelude()) return false;
     assert(_db != null);
 
-    return await _DBTag.insert(db: _db!, tagName: tagName);
+    return await _DBTag.insert(_db!, tagName);
   }
 
   /// 删除标签
@@ -268,7 +276,7 @@ class DBController {
     if (!await _prelude()) return false;
     assert(_db != null);
 
-    return await _DBTag.delete(db: _db!, tagId: tagId);
+    return await _DBTag.delete(_db!, tagId);
   }
 
   /// 查询标签
@@ -279,7 +287,7 @@ class DBController {
     if (!await _prelude()) return [];
     assert(_db != null);
 
-    return await _DBTag.query(db: _db!, tagId: tagId, nameLike: nameLike);
+    return await _DBTag.query(_db!, tagId: tagId, nameLike: nameLike);
   }
 
   /// 修改标签
@@ -300,17 +308,37 @@ class DBController {
 
   /// 新增记录
   static Future<bool> addRecord() async {
+    // todo
     return false;
   }
 
   /// 删除记录
   /// 查询记录
+  static Future<List<Map<String, Object?>>> query({
+    bool? isIncome,
+    RangeInt? amountRange,
+    String? descLike,
+    RangeDate? dateRange,
+    int? tagId,
+  }) async {
+    if (!await _prelude()) return [];
+    assert(_db != null);
+
+    return await _DBRecord.query(
+      _db!,
+      isIncome: isIncome,
+      amountRange: amountRange,
+      descLike: descLike,
+      dateRange: dateRange,
+      tagId: tagId,
+    );
+  }
+
   /// 修改记录
 
   /// 测试 - 全部表名
   static Future<void> testQueryTableList() async {
     if (_db == null) {
-      print('object');
       safePrint('数据库未打开', condition: '测试');
     } else {
       _db!.rawQuery(_DBConstants.sqlTableNames).then((value) {
@@ -323,6 +351,7 @@ class DBController {
   static Future<void> testQuerySeq() async {
     if (!await _prelude()) return;
     assert(_db != null);
+
     _DBMeta.querySeq(_db!)
         .then((value) => safePrint(value, condition: '自增表查询'));
   }
@@ -330,6 +359,7 @@ class DBController {
   static Future<void> testQueryMeta() async {
     if (!await _prelude()) return;
     assert(_db != null);
+
     _DBMeta.queryMeta(_db!)
         .then((value) => safePrint(value, condition: '安卓元数据表查询'));
   }
