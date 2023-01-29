@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wohuaqianlema/scripts/db.dart';
+import 'package:wohuaqianlema/scripts/range.dart';
 import '../scripts/utils.dart';
 
 class TestPage extends StatefulWidget {
@@ -113,6 +114,20 @@ class _TestPageState extends State<TestPage> {
               onPressed: () {
                 DBController.queryRecord()
                     .then((value) => safePrint(value, condition: '测试:新增记录'));
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.cyan),
+              child: Text('条件查询记录'),
+              onPressed: () {
+                DBController.queryRecord(
+                  isIncome: true,
+                  amountRange: RangeNumber(min: 0, max: 9999),
+                  descLike: '测试',
+                  dateRange:
+                      RangeDate(min: DateTime(2010), max: DateTime(2024)),
+                  tagId: 1,
+                ).then((value) => safePrint(value, condition: '测试:条件查询记录'));
               },
             ),
             ElevatedButton(

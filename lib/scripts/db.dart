@@ -73,7 +73,7 @@ class _DBMeta {
     assert(tableName == _DBTag.tableName || tableName == _DBRecord.tableName);
 
     try {
-      db.update(tableNameSeq, {"seq": 0}, where: 'name="$tableName"');
+      db.update(tableNameSeq, {"seq": 0}, where: 'name = "$tableName"');
       return true;
     } catch (err) {
       safePrint(err, condition: '重置自增表');
@@ -100,7 +100,7 @@ class _DBTag {
   /// 删除标签
   static Future<bool> delete(Database db, int tagId) async {
     try {
-      await db.delete(tableName, where: 'id=$tagId');
+      await db.delete(tableName, where: 'id = $tagId');
       return true;
     } catch (err) {
       safePrint(err, condition: '删除标签');
@@ -121,7 +121,7 @@ class _DBTag {
 
     String? where;
     if (tagId != null) {
-      where = 'id=$tagId';
+      where = 'id = $tagId';
     } else if (nameLike != null) {
       where = 'name like "%$nameLike%"';
     }
@@ -139,7 +139,7 @@ class _DBTag {
   /// **@param** newName 新标签名 <br/>
   static Future<bool> update(Database db, int tagId, String newName) async {
     try {
-      await db.update(tableName, {'name': newName}, where: 'id=$tagId');
+      await db.update(tableName, {'name': newName}, where: 'id = $tagId');
       return true;
     } catch (err) {
       safePrint(err, condition: '更新标签');
@@ -193,7 +193,7 @@ class _DBRecord {
   /// 删除记录
   static Future<bool> delete(Database db, int recordId) async {
     try {
-      await db.delete(tableName, where: 'id=$recordId');
+      await db.delete(tableName, where: 'id = $recordId');
       return true;
     } catch (err) {
       safePrint(err, condition: '删除记录');
@@ -202,19 +202,44 @@ class _DBRecord {
   }
 
   /// 查询记录 (详细条件查询)
-  // todo
   static Future<List<Map<String, Object?>>> query(
     Database db, {
     bool? isIncome,
-    RangeInt? amountRange,
+    RangeNumber? amountRange,
     String? descLike,
     RangeDate? dateRange,
     int? tagId,
   }) async {
-    String? where;
+    List<String> conditions = [];
+
+    if (isIncome != null) conditions.add('isIncome = ${isIncome ? 1 : 0}');
+    if (amountRange != null &&
+        (amountRange.min != null || amountRange.max != null)) {
+      if (amountRange.max == null) {
+        conditions.add('amount >= ${amountRange.min}');
+      } else if (amountRange.min == null) {
+        conditions.add('amount <= ${amountRange.max}');
+      } else {
+        conditions
+            .add('amount between ${amountRange.min} and ${amountRange.max}');
+      }
+    }
+    if (descLike != null) conditions.add('desc like "%$descLike%"');
+    if (dateRange != null && (dateRange.min != null || dateRange.max != null)) {
+      if (dateRange.max == null) {
+        conditions.add('timestamp >= ${dateRange.min!.millisecondsSinceEpoch}');
+      } else if (dateRange.min == null) {
+        conditions.add('timestamp <= ${dateRange.max!.millisecondsSinceEpoch}');
+      } else {
+        conditions.add(
+            'timestamp between ${dateRange.min!.millisecondsSinceEpoch} and ${dateRange.max!.millisecondsSinceEpoch}');
+      }
+    }
+    if (tagId != null) conditions.add('tagId = $tagId');
 
     try {
-      return await db.query(tableName, where: where);
+      return await db.query(tableName,
+          where: conditions.isEmpty ? null : conditions.join(' AND '));
     } catch (err) {
       safePrint(err, condition: '查询记录');
       return [];
@@ -225,14 +250,13 @@ class _DBRecord {
   /// todo
   static Future<bool> update(Database db, int tagId, String newName) async {
     try {
-      await db.update(tableName, {'name': newName}, where: 'id=$tagId');
+      await db.update(tableName, {'name': newName}, where: 'id = $tagId');
       return true;
     } catch (err) {
       safePrint(err, condition: '更新标签');
       return false;
     }
   }
-
 
   /// 清空记录并重置自增为0
   static Future<bool> clear(Database db) async {
@@ -402,7 +426,7 @@ class DBController {
   /// 查询记录
   static Future<List<Map<String, Object?>>> queryRecord({
     bool? isIncome,
-    RangeInt? amountRange,
+    RangeNumber? amountRange,
     String? descLike,
     RangeDate? dateRange,
     int? tagId,
