@@ -163,6 +163,30 @@ class _DBRecord {
   /// 表名
   static const tableName = 'record';
 
+  /// 新增记录
+  static Future<bool> insert(
+    Database db, {
+    required int isIncome,
+    required double amount,
+    String? desc,
+    required int timestamp,
+    int? tagId,
+  }) async {
+    try {
+      await db.insert(tableName, {
+        "isIncome": isIncome,
+        "amount": amount,
+        "desc": desc,
+        "timestamp": timestamp,
+        "tagId": tagId,
+      });
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '新增记录');
+      return false;
+    }
+  }
+
   /// 查询记录 (详细条件查询)
   static Future<List<Map<String, Object?>>> query(
     Database db, {
@@ -172,12 +196,12 @@ class _DBRecord {
     RangeDate? dateRange,
     int? tagId,
   }) async {
-    String where;
+    String? where;
 
     // todo
 
     try {
-      return [];
+      return await db.query(tableName, where: where);
     } catch (err) {
       safePrint(err, condition: '查询记录');
       return [];
@@ -238,7 +262,7 @@ class DBController {
       bool dbResult = await _initDB();
       bool tableResult = await _initTables();
       if (dbResult && tableResult) {
-        safePrint('初始化数据库成功', condition: '初始化');
+        safePrint('数据库初始化并连接', condition: '初始化');
         return true;
       } else {
         safePrint('DB: $dbResult ;Tables: $tableResult}', condition: '初始化');
@@ -307,14 +331,29 @@ class DBController {
   }
 
   /// 新增记录
-  static Future<bool> addRecord() async {
-    // todo
-    return false;
+  static Future<bool> addRecord({
+    required int isIncome,
+    required double amount,
+    String? desc,
+    required int timestamp,
+    int? tagId,
+  }) async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBRecord.insert(
+      _db!,
+      isIncome: isIncome,
+      amount: amount,
+      desc: desc,
+      timestamp: timestamp,
+      tagId: tagId,
+    );
   }
 
   /// 删除记录
   /// 查询记录
-  static Future<List<Map<String, Object?>>> query({
+  static Future<List<Map<String, Object?>>> queryRecord({
     bool? isIncome,
     RangeInt? amountRange,
     String? descLike,

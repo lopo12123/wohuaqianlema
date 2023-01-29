@@ -82,24 +82,25 @@ class _RecordFormState extends State<RecordForm> {
   }
 
   // 计算当前表单的数据
-  void submitForm(BuildContext ctx) async {
+  void submitForm() async {
     String amountStr = _amountController.text.trim();
-    if (!RegExp(r'^(0|[1-9])[0-9]*(\.[0-9]+)$').hasMatch(amountStr)) {
+    if (!RegExp(r'^(0|[1-9])[0-9]*(\.[0-9]+)?$').hasMatch(amountStr)) {
       BotToast.showSimpleNotification(title: '请输入正确的金额!');
     } else {
       double? amount = double.tryParse(amountStr);
       if (amount == null) {
-        BotToast.showSimpleNotification(title: '请输入正确的金额!');
+        BotToast.showSimpleNotification(title: '无法解析当前金额!');
       } else {
-        // bool ifInsertOk = await RecordManager.insert(
-        //   isIncome: isIncome,
-        //   amount: amount,
-        //   desc: _descController.text.trim(),
-        // );
+        bool ifInsertOk = await DBController.addRecord(
+          isIncome: isIncome ? 1 : 0,
+          amount: amount,
+          desc: _descController.text,
+          timestamp: recordTime.millisecondsSinceEpoch,
+          tagId: tagId,
+        );
 
-        // BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
-
-        // if (ifInsertOk) Navigator.of(ctx).pop(true);
+        BotToast.showSimpleNotification(title: ifInsertOk ? '新增成功!' : '新增失败!');
+        if (ifInsertOk) Navigator.of(context).pop(true);
       }
     }
   }
@@ -280,7 +281,7 @@ class _RecordFormState extends State<RecordForm> {
                 controller: _amountController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  // 全串匹配 r'^(0|[1-9])[0-9]*(\.[0-9]+)$'
+                  // 全串匹配 r'^(0|[1-9])[0-9]*(\.[0-9]+)?$'
                   FilteringTextInputFormatter.allow(RegExp(r'[.0-9]')),
                 ],
                 style: const TextStyle(color: Colors.green),
@@ -352,7 +353,7 @@ class _RecordFormState extends State<RecordForm> {
                   child: ElevatedButton.icon(
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    onPressed: () => submitForm(context),
+                    onPressed: submitForm,
                     icon: const Icon(Icons.add_task),
                     label: const Text('确认'),
                   ),
