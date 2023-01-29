@@ -119,9 +119,16 @@ class _TestPageState extends State<TestPage> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.cyan),
               child: Text('删除记录'),
               onPressed: () {
-                safePrint('todo', condition: '测试:删除记录');
-                // DBController.clearAllTag()
-                //     .then((value) => safePrint(value, condition: '测试:删除记录'));
+                DBController.deleteRecord(1)
+                    .then((value) => safePrint(value, condition: '测试:删除记录'));
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('清空记录'),
+              onPressed: () {
+                DBController.clearAllRecord()
+                    .then((value) => safePrint(value, condition: '测试:清空记录'));
               },
             ),
           ],

@@ -67,10 +67,13 @@ class _DBMeta {
     }
   }
 
-  /// 重置自增表
-  static Future<bool> resetSeq(Database db) async {
+  /// 重置标签自增 <br/>
+  /// `tableName` 的值为 `_DBTag.tableName` 或 `_DBRecord.tableName` <br/>
+  static Future<bool> resetSeq(Database db, String tableName) async {
+    assert(tableName == _DBTag.tableName || tableName == _DBRecord.tableName);
+
     try {
-      db.update(tableNameSeq, {"seq": 0});
+      db.update(tableNameSeq, {"seq": 0}, where: 'name="$tableName"');
       return true;
     } catch (err) {
       safePrint(err, condition: '重置自增表');
@@ -148,7 +151,7 @@ class _DBTag {
   static Future<bool> clear(Database db) async {
     try {
       await db.delete(tableName);
-      bool resetResult = await _DBMeta.resetSeq(db);
+      bool resetResult = await _DBMeta.resetSeq(db, tableName);
       if (!resetResult) safePrint('重置出错', condition: '重置标签自增');
 
       return true;
@@ -187,7 +190,19 @@ class _DBRecord {
     }
   }
 
+  /// 删除记录
+  static Future<bool> delete(Database db, int recordId) async {
+    try {
+      await db.delete(tableName, where: 'id=$recordId');
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '删除记录');
+      return false;
+    }
+  }
+
   /// 查询记录 (详细条件查询)
+  // todo
   static Future<List<Map<String, Object?>>> query(
     Database db, {
     bool? isIncome,
@@ -198,13 +213,38 @@ class _DBRecord {
   }) async {
     String? where;
 
-    // todo
-
     try {
       return await db.query(tableName, where: where);
     } catch (err) {
       safePrint(err, condition: '查询记录');
       return [];
+    }
+  }
+
+  /// 更新记录
+  /// todo
+  static Future<bool> update(Database db, int tagId, String newName) async {
+    try {
+      await db.update(tableName, {'name': newName}, where: 'id=$tagId');
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '更新标签');
+      return false;
+    }
+  }
+
+
+  /// 清空记录并重置自增为0
+  static Future<bool> clear(Database db) async {
+    try {
+      await db.delete(tableName);
+      bool resetResult = await _DBMeta.resetSeq(db, tableName);
+      if (!resetResult) safePrint('重置出错', condition: '重置记录自增');
+
+      return true;
+    } catch (err) {
+      safePrint(err, condition: '清空记录');
+      return false;
     }
   }
 }
@@ -352,6 +392,13 @@ class DBController {
   }
 
   /// 删除记录
+  static Future<bool> deleteRecord(int recordId) async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBRecord.delete(_db!, recordId);
+  }
+
   /// 查询记录
   static Future<List<Map<String, Object?>>> queryRecord({
     bool? isIncome,
@@ -374,6 +421,13 @@ class DBController {
   }
 
   /// 修改记录
+  /// 清空记录并重置自增为1
+  static Future<bool> clearAllRecord() async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBRecord.clear(_db!);
+  }
 
   /// 测试 - 全部表名
   static Future<void> testQueryTableList() async {
