@@ -247,10 +247,27 @@ class _DBRecord {
   }
 
   /// 更新记录
-  /// todo
-  static Future<bool> update(Database db, int tagId, String newName) async {
+  static Future<bool> update(
+    Database db,
+    int recordId, {
+    int? isIncome,
+    double? amount,
+    String? desc,
+    int? timestamp,
+    int? tagId,
+  }) async {
+    Map<String, Object?> affectItems = {
+      "isIncome": isIncome,
+      "amount": amount,
+      "desc": desc,
+      "timestamp": timestamp,
+      "tagId": tagId,
+    }..removeWhere((key, value) => value == null);
+
+    if (affectItems.isEmpty) return false;
+
     try {
-      await db.update(tableName, {'name': newName}, where: 'id = $tagId');
+      await db.update(tableName, affectItems, where: 'id = $recordId');
       return true;
     } catch (err) {
       safePrint(err, condition: '更新标签');
@@ -445,6 +462,28 @@ class DBController {
   }
 
   /// 修改记录
+  static Future<bool> editRecord(
+    int recordId, {
+    int? isIncome,
+    double? amount,
+    String? desc,
+    int? timestamp,
+    int? tagId,
+  }) async {
+    if (!await _prelude()) return false;
+    assert(_db != null);
+
+    return await _DBRecord.update(
+      _db!,
+      recordId,
+      isIncome: isIncome,
+      amount: amount,
+      desc: desc,
+      timestamp: timestamp,
+      tagId: tagId,
+    );
+  }
+
   /// 清空记录并重置自增为1
   static Future<bool> clearAllRecord() async {
     if (!await _prelude()) return false;

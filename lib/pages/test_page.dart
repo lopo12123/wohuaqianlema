@@ -139,6 +139,14 @@ class _TestPageState extends State<TestPage> {
               },
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.cyan),
+              child: Text('编辑记录'),
+              onPressed: () {
+                DBController.editRecord(1)
+                    .then((value) => safePrint(value, condition: '测试:编辑记录'));
+              },
+            ),
+            ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: Text('清空记录'),
               onPressed: () {
